@@ -1,0 +1,269 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+header {
+    position: sticky;
+    top: 0;
+    background-color: #daa700;
+    text-align: center;
+    padding-top: 10px;
+    margin: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    background-color: #ffc400;
+    padding: 8px 0;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+}
+
+nav a {
+    color: black;
+    text-decoration: none;
+    padding: 8px 20px;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+nav a:hover {
+    background-color: #e0a800;
+}
+
+section {
+    position: relative;
+    width: 1250px;
+    margin: auto;
+    padding: 0;
+}
+
+h2 {
+    position: sticky;
+    top: 140px;
+    font-size: 1.5rem;
+    color: #222;
+    border-left: 5px solid #daa700;
+    padding-left: 10px;
+    background-color: white;
+    padding: 15px;
+}
+
+#rezervace h2 {
+    display: block;
+    width: fit-content;
+    text-align: center;
+    margin: auto;
+}
+
+section p {
+    margin: auto;
+    padding: 15px;
+    padding-left: 100px;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 15px;
+    overflow: hidden;
+    background-color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+}
+
+th, td {
+    text-align: center;
+    padding: 12px 25px;
+}
+
+th {
+    background-color: #d3d3d3;
+    font-weight: bold;
+}
+
+tr:hover {
+    background-color: rgba(255, 196, 0, 0.25);
+    transition: background-color 0.2s ease;
+}
+
+.odd {
+    background-color: #cccccc;
+}
+
+.even {
+    background-color: #daa700;
+}
+
+tr:first-child td:first-child {
+  border-top-left-radius: 12px;
+}
+
+tr:first-child td:last-child {
+  border-top-right-radius: 12px;
+}
+
+tr:last-child td:first-child {
+  border-bottom-left-radius: 12px;
+}
+
+tr:last-child td:last-child {
+  border-bottom-right-radius: 12px;
+}
+
+form {
+  background-color: #fff;
+  padding: 25px 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: fit-content;
+  margin: 40px auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+label {
+    margin: 10px 0 5px;
+    font-weight: 600;
+}
+
+input, button {
+    margin-bottom: 15px;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    width: 250px;
+    transition: border-color 0.2s ease;
+}
+
+input:focus {
+    border-color: #daa700;
+    outline: none;
+}
+
+button {
+    background-color: #daa700;
+    color: #000;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #ffc400;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.floating-label {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+}
+
+
+.floating-label input {
+    width: 100%;
+    padding: 20px 10px;
+    padding-bottom: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    background-color: transparent;
+}
+
+.floating-label input:focus {
+    border-color: #daa700;
+}
+
+.floating-label label {
+    position: absolute;
+    top: 12px;
+    left: 10px;
+    color: #666;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: 0.2s ease all;
+    background-color: #fff;
+    padding: 0 5px;
+}
+
+.floating-label input:focus + label, .floating-label input:not(:placeholder-shown) + label {
+    top: -8px;
+    left: 8px;
+    font-size: 0.8rem;
+    color: #daa700;
+}
+
+input[type="submit"] {
+    height: 53px;
+    background-color: #daa700;
+    color: #000;
+    font-weight: 600;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-self: flex-start;
+}
+
+input[type="submit"]:hover {
+    background-color: #ffc400;
+}
+
+#pridat {
+    float: left;
+}
+
+.floating-label select {
+    width: 100%;
+    padding: 20px 10px;
+    padding-bottom: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    background-color: transparent;
+    appearance: none; /* odstraní defaultní šipku prohlížeče */
+}
+
+.floating-label select:focus {
+    border-color: #daa700;
+}
+
+.floating-label select + label {
+    top: 12px;
+    left: 10px;
+    color: #666;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: 0.2s ease all;
+    background-color: #fff;
+    padding: 0 5px;
+}
+
+.floating-label select:focus + label,
+.floating-label select:not([value=""]) + label {
+    top: -8px;
+    left: 8px;
+    font-size: 0.8rem;
+    color: #daa700;
+}
