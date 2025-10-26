@@ -20,7 +20,7 @@
 - [Použití](#použití)
 - [Struktura projektu](#struktura-projektu)
 - [Možné změny](#Možné-změny)
-- [Přispívání](#přispívání)
+- [Přispívání](#Přispívání)
 - [Licence](#licence)
 - [Kontakt](#kontakt)
 
