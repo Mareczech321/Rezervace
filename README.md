@@ -115,7 +115,7 @@ git clone https://github.com/Mareczech321/Rezervace.git
 
 ---
 
-## 📄 Licence
+## Licence
 
 Projekt **Rezervace** je licencován pod licencí **MIT**.  
 Podrobnosti naleznete v souboru `LICENSE`.
