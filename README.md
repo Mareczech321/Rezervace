@@ -2,6 +2,11 @@
   <h1 align="center">Rezervační systém</h1>
 </p>
 
+<p align="center">
+  🌐 <b>Online verze projektu:</b>  
+  <a href="https://rezervace.example.com">https://rezervace.example.com</a>
+</p>
+
 <div align="center">
   <img src="https://img.shields.io/badge/jazyk-PHP-blue.svg" />
   <img src="https://img.shields.io/badge/databaze-MySQL-green.svg" />
