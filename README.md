@@ -52,10 +52,10 @@
 - Naklonujte repo z GitHubu
 - Nahrajte DB na localhost
 
-~~~git
+```git
 cd C:\xampp\htdocs
 git clone https://github.com/Mareczech321/Rezervace.git
-~~~
+```
 
 ### Externí server / hosting
 
