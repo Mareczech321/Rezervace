@@ -75,6 +75,8 @@ git clone https://github.com/Mareczech321/Rezervace.git
 
 - Přejděte na URL vaší stránky
 
+---
+
 ## Struktura projektu
 
 ~~~plaintext
