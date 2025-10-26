@@ -1,44 +1,48 @@
 <?php
 
+    session_start();
+
     include 'config/db.php';
+    include 'register/index.php';
+    include 'login/index.php';
     
     if (isset($_POST['pridat'], $_POST['id_mistnosti'], $_POST['jmeno'], $_POST['zacatek'], $_POST['konec'], $_POST['datum'])) {
-    $id_mistnosti = $_POST['id_mistnosti'];
-    $cele_jmeno = $_POST['jmeno'];
-    $parts = explode(" ", $cele_jmeno, 2);
-    $jmeno = $parts[0];
-    $prijmeni = isset($parts[1]) ? $parts[1] : '';
-    $zacatek = $_POST['zacatek'];
-    $konec = $_POST['konec'];
-    $datum = $_POST['datum'];
+        $id_mistnosti = $_POST['id_mistnosti'];
+        $cele_jmeno = $_POST['jmeno'];
+        $parts = explode(" ", $cele_jmeno, 2);
+        $jmeno = $parts[0];
+        $prijmeni = isset($parts[1]) ? $parts[1] : '';
+        $zacatek = $_POST['zacatek'];
+        $konec = $_POST['konec'];
+        $datum = $_POST['datum'];
 
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM rezervace WHERE mistnost_id = ? AND datum = ? AND ((zacatek < ? AND konec > ?) OR (zacatek < ? AND konec > ?) OR (zacatek >= ? AND konec <= ?))");
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM rezervace WHERE mistnost_id = ? AND datum = ? AND ((zacatek < ? AND konec > ?) OR (zacatek < ? AND konec > ?) OR (zacatek >= ? AND konec <= ?))");
 
-    $stmt->execute([$id_mistnosti, $datum, $konec, $zacatek, $zacatek, $konec, $zacatek, $konec]);
-    $obsazeno = $stmt->fetchColumn();
+        $stmt->execute([$id_mistnosti, $datum, $konec, $zacatek, $zacatek, $konec, $zacatek, $konec]);
+        $obsazeno = $stmt->fetchColumn();
 
-    if ($obsazeno > 0) {
-        die("Místnost je v tomto časovém úseku již rezervovaná!");
-    }
+        if ($obsazeno > 0) {
+            die("Místnost je v tomto časovém úseku již rezervovaná!");
+        }
 
-    if (empty($prijmeni)) {
-        die("Prosím zadejte i příjmení.");
-    }
+        if (empty($prijmeni)) {
+            die("Prosím zadejte i příjmení.");
+        }
 
-    if ($konec <= $zacatek) {
-        die("Konec musí být později než začátek!");
-    }
+        if ($konec <= $zacatek) {
+            die("Konec musí být později než začátek!");
+        }
 
-    $datum_cas = DateTime::createFromFormat('Y-m-d H:i', $datum . ' ' . $zacatek);
-    $now = new DateTime();
+        $datum_cas = DateTime::createFromFormat('Y-m-d H:i', $datum . ' ' . $zacatek);
+        $now = new DateTime();
 
-    if ($datum_cas < $now) {
-        die("Rezervace nemůže být v minulosti!");
-    }
+        if ($datum_cas < $now) {
+            die("Rezervace nemůže být v minulosti!");
+        }
 
-    $stmt = $pdo->prepare("INSERT INTO rezervace (mistnost_id, jmeno_osoby, prijmeni_osoby, datum, zacatek, konec) VALUES (?, ?, ?, ?, ?, ?)"); 
+        $stmt = $pdo->prepare("INSERT INTO rezervace (mistnost_id, jmeno_osoby, prijmeni_osoby, datum, zacatek, konec) VALUES (?, ?, ?, ?, ?, ?)"); 
 
-    $stmt->execute([$id_mistnosti, $jmeno, $prijmeni, $datum, $zacatek, $konec]);
+        $stmt->execute([$id_mistnosti, $jmeno, $prijmeni, $datum, $zacatek, $konec]);
     }
 
     if (isset($_POST['smazat'], $_POST['id'])) {
@@ -48,7 +52,31 @@
 
         $stmt->execute([$id]);
     }
+
+    if (isset($_POST['login'], $_POST['username'], $_POST['heslo'])) {
+        prihlaseni($_POST['username'], $_POST['heslo']);
+    }
+
+    if (isset($_POST['register'], $_POST['user-reg'], $_POST['pass-reg'], $_POST['email-reg'])) {
+        registrace($_POST['user-reg'], $_POST['pass-reg'], $_POST['email-reg']);
+        $_SESSION['user_id'] = $pdo->lastInsertId();
+        $_SESSION['username'] = $_POST['user-reg'];
+        header("Location: index.php");
+    }
     
+    if (isset($_SESSION['user_id']) && !isset($_SESSION['username'])) {
+        $stmt = $pdo->prepare("SELECT username FROM users WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $user = $stmt->fetch();
+        if ($user) {
+            $_SESSION['username'] = $user['username'];
+        }
+    }
+
+    if (isset($_POST['username'], $_POST['heslo'])) {
+        prihlaseni($_POST['username'], $_POST['heslo']);
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -57,18 +85,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rezervační systém</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styly.css">
 </head>
 <body>
+    <div id="blur-overlay" onclick="zavrit()" style="display: none;"></div>
     <header>
-        <h1>Systém rezervování místností</h1>
+        <div id="header-top">
+            <h1>Systém rezervování místností</h1>
+            <?php
 
+                if (isset($_SESSION['user_id'])) {
+                    echo "<button onclick=\"odhlasit()\" id=\"login\">{$_SESSION['username']} (odhlásit)</button>";
+                } else {
+                    echo "<button onclick=\"prihlaseni()\" id=\"login\">Přihlášení</button>";
+                }
+
+            ?>
+
+        </div>
+        
         <nav>
             <a href="#rezervovane">Domů</a>
             <a href="#mistnosti">Místnosti</a>
             <a href="#rezervace">Správa</a> 
-        </nav>
+        </nav>        
     </header>
+
+    <section>
+        <form method="POST" id="prihlaseni">         
+            <button onclick="zavrit()" class="zavrit" style="position: absolute; top: 5px; right: -100px; background: none;">✕</button>   
+            <h3 style="text-align: center;">Přihlášení</h3>
+            <div class="row">
+                <div class="floating-label">
+                    <input type="text" name="username" id="username-login" placeholder=" ">
+                    <label for="username">Uživatelské jméno</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="floating-label">
+                    <input type="password" name="heslo" id="heslo-login" placeholder=" ">
+                    <label for="heslo">Heslo</label>
+                    <img src="./img/eye.png" alt="" onclick="showPass()" id="show">
+                </div>
+            </div>
+            <div class="row" id="register-link">
+                <a onclick="registrace()" id="create-acc">Nemáte účet? Zaregistrujte se zde.</a>
+            </div>
+            <input type="submit" value="Přihlásit se" name="login" id="login-btn">
+        </form>
+
+        <form method="POST" id="registrace">
+            <button onclick="zavrit()" class="zavrit" style="position: absolute; top: 5px; right: -100px; background: none;">✕</button>
+            <h3 style="text-align: center;">Registrace</h3>
+            <div class="row">
+                <div class="floating-label">
+                    <input type="text" name="user-reg" id="user-reg" placeholder=" ">
+                    <label for="user-reg">Uživatelské jméno</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="floating-label">
+                    <input type="password" name="pass-reg" id="pass-reg" placeholder=" ">
+                    <label for="pass-reg">Heslo</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="floating-label">
+                    <input type="email" name="email-reg" id="email-reg" placeholder=" ">
+                    <label for="email-reg">E-mail</label>
+                </div>
+            </div>
+            <input type="submit" value="Registrovat se" name="register">
+        </form>
+    
 
     <section id="rezervovane">
         <?php 
@@ -200,5 +289,56 @@
                 </div>
             </form>
     </section>
+    </section>
 </body>
 </html>
+<script>
+function prihlaseni() {
+  document.getElementById('blur-overlay').style.display = 'block';
+  document.getElementById('prihlaseni').style.display = 'block';
+}
+
+function registrovani() {
+  document.getElementById('blur-overlay').style.display = 'block';
+  document.getElementById('registrace').style.display = 'block';
+}
+
+function zavritPrihlaseni() {
+  document.getElementById('blur-overlay').style.display = 'none';
+  document.getElementById('prihlaseni').style.display = 'none';
+}
+
+function zavritRegistraci(){
+    document.getElementById('blur-overlay').style.display = 'none';
+    document.getElementById('registrace').style.display = 'none';
+}
+
+function registrace(){
+    zavritPrihlaseni();
+    registrovani();
+}
+
+function zavrit(){
+    zavritPrihlaseni();
+    zavritRegistraci();
+}
+
+function showPass() {
+    var passField = document.getElementById("heslo-login");
+    var showIcon = document.getElementById("show");
+    if (passField.type === "password") {
+        passField.type = "text";
+        showIcon.src = "./img/hidden.png";
+    } else {
+        passField.type = "password";
+        showIcon.src = "./img/eye.png";
+    }
+}
+
+function odhlasit() {
+    fetch('logout.php', {method: 'POST'}).then(() => {
+        window.location.href = 'index.php';
+    });
+}
+
+</script>

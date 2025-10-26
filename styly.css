@@ -17,6 +17,9 @@ header {
 
 nav {
     display: flex;
+    width: 500px;
+    margin: auto;
+    margin-right: 700px;
     justify-content: center;
     background-color: #ffc400;
     padding: 8px 0;
@@ -242,7 +245,7 @@ input[type="submit"]:hover {
     outline: none;
     transition: border-color 0.3s ease;
     background-color: transparent;
-    appearance: none; /* odstraní defaultní šipku prohlížeče */
+    appearance: none;
 }
 
 .floating-label select:focus {
@@ -260,10 +263,69 @@ input[type="submit"]:hover {
     padding: 0 5px;
 }
 
-.floating-label select:focus + label,
-.floating-label select:not([value=""]) + label {
+.floating-label select:focus + label, .floating-label select:not([value=""]) + label {
     top: -8px;
     left: 8px;
     font-size: 0.8rem;
     color: #daa700;
+}
+
+#header-top button {
+    position: relative;
+    bottom: -5px;
+    display: inline;
+    float: right;
+    margin: 0;
+    padding: 15px 5px;
+}
+
+#show {
+    position: relative;
+    width: 20px;
+    float: right;
+    top: -60px;
+    right: 15px;
+    margin: 0;
+    padding: 0;
+    border-left: solid #949494 1px;
+    padding: 10px;
+    padding-right: 0;
+    cursor: pointer;
+}
+
+#prihlaseni, #registrace {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    display: none;
+    background: white;
+    border-radius: 15px;
+    padding: 30px 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+#blur-overlay {
+  position: fixed;
+  inset: 0;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  background-color: rgba(0, 0, 0, 0.4);
+  will-change: opacity;
+  transition: opacity 0.3s ease;
+  z-index: 1000;
+}
+
+#register-link {
+    text-align: center;
+    position: relative;
+    top: 5px;
+    margin-top: -40px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+#register-link:hover {
+    text-decoration: underline;
 }
