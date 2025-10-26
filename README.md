@@ -3,151 +3,122 @@
 </p>
 
 <div align="center">
-  <img src="https://img.shields.io/badge/jazyk-Python-blue.svg" />
-  <img src="https://img.shields.io/badge/framework-Django-green.svg" />
+  <img src="https://img.shields.io/badge/jazyk-PHP-blue.svg" />
+  <img src="https://img.shields.io/badge/databaze-MySQL-green.svg" />
   <img src="https://img.shields.io/badge/stav-aktivní-brightgreen.svg" />
   <img src="https://img.shields.io/github/last-commit/Mareczech321/Rezervace.svg" />
 </div>
 
 ---
 
-## 📖 Table of Contents
+## Obsah
 
-- [Overview](#overview)
-- [Features](#features)
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-- [Project Structure](#project-structure)
-- [Future Work](#future-work)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
-
----
-
-## 📌 Overview
-
-**TaskForge** is a cross-platform, modern C++ task manager that runs entirely in your terminal. It allows you to organize, track, and manage your tasks using a colorful CLI and `nlohmann/json` for structured data storage. Designed for simplicity and functionality, it's perfect for developers and CLI enthusiasts.
+- [Funkce](#funkce)
+- [Požadavky a instalace](#funkce)
+  - [Požadavky](#požadavky)
+  - [Instalace](#instalace)
+- [Použití](#použití)
+- [Struktura projektu](#struktura-projektu)
+- [Možné změny](#změny)
+- [Přispívání](#přispívání)
+- [Licence](#licence)
+- [Kontakt](#kontakt)
 
 ---
 
-## ✨ Features
+## Požadavky a instalace
 
-- ✅ Add, edit, delete, and list tasks
-- ✅ Tag-based filtering and management
-- ✅ Search by description, tags, due date, priority, or ID
-- ✅ Configurable file path storage using `config.cfg`
-- ✅ JSON-based persistence using `nlohmann/json`
-- ✅ Color-coded CLI output (Windows/macOS/Linux compatible)
-- ✅ Built with modern C++17 and `std::filesystem`
+### Funkce
+
+- Vytváření a mazání rezervací  
+- Přehled dostupných a obsazených termínů  
+- Přehledné a responzivní uživatelské rozhraní  
 
 ---
 
-## 🛠️ Getting Started
+### Požadavky
 
-### 🔧 Prerequisites
+- PHP v. 7.4 nebo novější
+- MySQL nebo jiná DB
+- Server - localhost (např. XAMPP) nebo hosting
 
-- C++17 compatible compiler (`g++`, MSVC, Clang, etc.)
-- CMake 3.10+
-- A terminal that supports ANSI escape codes
-- [nlohmann/json](https://github.com/nlohmann/json) (header-only)
+## Instalace
 
-### 📦 Installation
+### XAMPP
 
-#### Option 1: Build with CMake
+- Otevřete složku `htdocs`, tam kde je nainstalovaný XAMPP
+- Naklonujte repo z GitHubu
+- Nahrajte DB na localhost
 
-~~~bash
-git clone https://github.com/Mareczech321/TaskForge.git
-cd TaskForge
-mkdir build && cd build
-cmake ..
-cmake --build .
+~~~git
+cd C:\xampp\htdocs
+git clone https://github.com/Mareczech321/Rezervace.git
 ~~~
 
-#### Option 2: Compile Manually
+### Externí server / hosting
 
-~~~bash
-g++ -std=c++17 -o taskforge src/*.cpp -Iinclude
-~~~
-
----
-
-## ⚙️ Usage
-
-Launch the program:
-
-~~~bash
-./taskforge
-~~~
-
-Then use the interactive CLI to manage your tasks:
-
-~~~bash
-TaskForge >> help
-TaskForge >> add
-TaskForge >> list
-TaskForge >> edit
-TaskForge >> delete
-TaskForge >> search
-TaskForge >> quit
-~~~
+- Nahrajte soubory podle instrukcí hostingu
+- Změňte `config\config.php` na přihlašovací údaje na DB hostingu
 
 ---
 
-## 📁 Project Structure
+## Použití
+
+### XAMPP
+
+- Spusťte XAMPP
+- Přejděte na `http://localhost/Rezervace`
+
+### Hosting
+
+- Přejděte na URL vaší stránky
+
+## Struktura projektu
 
 ~~~plaintext
-/
-├── include/
-│   ├── TaskManager.h      ← Task manager class declarations
-│   ├── colors.h           ← Terminal color functions
-├── src/
-│   ├── TaskManager.cpp    ← Core logic (add/edit/delete/search)
-│   ├── commands.cpp       ← CLI parsing and command routing
-├── main.cpp               ← CLI entry point
-├── config.cfg             ← Path to task storage file (auto-generated)
-├── tasks.json             ← JSON data store for tasks
-├── CMakeLists.txt         ← CMake build configuration
-├── README.md              ← Project documentation
+└── 📁Rezervace
+    └── 📁config
+        ├── config.php
+        ├── db.php
+    ├── .gitattributes
+    ├── index.php
+    ├── readme.md
+    ├── rezervace.sql
+    ├── style.css
+    └── Zadani.pdf
 ~~~
 
 ---
 
-## 🚧 Future Work
+## Možné změny
 
-- 🔍 Advanced search filters (date ranges, tag logic)
-- 🗂️ Support for multiple task folders/projects
-- 🔔 Notifications or reminders
-- 🖼️ GUI frontend using Qt or Electron (future milestone)
-- 📦 Packaging for Linux and Windows (e.g., `.deb`, `.exe`, `brew`)
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome!
-
-1. Fork the repository  
-2. Create a new branch: `feature/your-feature`  
-3. Make your changes and commit  
-4. Open a Pull Request
+- Přihlašovací systém
+  - Login / registrace
+  - Administrace
+- Úprava příspěvků
+  - Přihlášenými uživateli nebo heslem
+- Notifikace přes e-mail
+- Pokročilé filtrování, vyhledávání v případě větší DB
 
 ---
 
-## 📄 License
+## Příspívání
 
-This project is licensed under the MIT License.  
-See the [`LICENSE`](LICENSE) file for details.
-
----
-
-## 📬 Contact
-
-- GitHub: [@Mareczech321](https://github.com/Mareczech321)
-- Issues & Suggestions: [Open a GitHub Issue](https://github.com/Mareczech321/TaskForge/issues)
+1. Forkněte repo
+2. Vytvořte novou větev
+3. Proveďte změny
+4. Pushněte větev
 
 ---
 
-###### *README.md and project idea by chatGPT
+## 📄 Licence
+
+Projekt **Rezervace** je licencován pod licencí **MIT**.  
+Podrobnosti naleznete v souboru `LICENSE`.
+
+---
+
+## Kontakt
+
+Autor: [@Mareczech321](https://github.com/Mareczech321)  
+Problémy a návrhy: [GitHub Issues](https://github.com/Mareczech321/Rezervace/issues)
