@@ -22,7 +22,7 @@
 - [Možné změny](#Možné-změny)
 - [Přispívání](#příspívání)
 - [Licence](#licence)
-- [Kontakt](#kontakt)
+- [Kontakt](#Kontakt)
 
 ---
 
@@ -120,5 +120,5 @@ Podrobnosti naleznete v souboru `LICENSE`.
 
 ## Kontakt
 
-Autor: [@Mareczech321](https://github.com/Mareczech321)  
+[@Mareczech321](https://github.com/Mareczech321)  
 Problémy a návrhy: [GitHub Issues](https://github.com/Mareczech321/Rezervace/issues)
