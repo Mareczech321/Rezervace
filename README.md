@@ -26,8 +26,6 @@
 
 ---
 
-## Požadavky a instalace
-
 ### Funkce
 
 - Vytváření a mazání rezervací  
@@ -35,6 +33,8 @@
 - Přehledné a responzivní uživatelské rozhraní  
 
 ---
+
+## Požadavky a instalace
 
 ### Požadavky
 
