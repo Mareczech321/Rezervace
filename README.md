@@ -19,7 +19,7 @@
   - [Instalace](#instalace)
 - [Použití](#použití)
 - [Struktura projektu](#struktura-projektu)
-- [Možné změny](#změny)
+- [Možné změny](#Možné-změny)
 - [Přispívání](#přispívání)
 - [Licence](#licence)
 - [Kontakt](#kontakt)
