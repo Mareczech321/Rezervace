@@ -3,8 +3,7 @@
 </p>
 
 <p align="center">
-  🌐 <b>Online verze projektu:</b>  
-  <a href="http://rezervace-mulac.wz.cz:8080">http://rezervace-mulac.wz.cz:8080</a>
+  <a href="http://rezervace-mulac.wz.cz:8080">🌐 <b>Online verze projektu:</b></a>
 </p>
 
 <div align="center">
