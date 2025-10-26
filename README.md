@@ -26,7 +26,7 @@
 
 ---
 
-### Funkce
+## Funkce
 
 - Vytváření a mazání rezervací  
 - Přehled dostupných a obsazených termínů  
@@ -41,6 +41,8 @@
 - PHP v. 7.4 nebo novější
 - MySQL nebo jiná DB
 - Server - localhost (např. XAMPP) nebo hosting
+
+---
 
 ## Instalace
 
