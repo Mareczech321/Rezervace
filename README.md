@@ -31,7 +31,7 @@
 
 ---
 
-## Funkce
+## Funkce (dle `Zadání.pdf` a něco navíc)
 
 - Vytváření a mazání rezervací  
 - Přehled dostupných a obsazených termínů  
