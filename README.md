@@ -101,13 +101,12 @@ git clone https://github.com/Mareczech321/Rezervace.git
 
 ## Možné změny
 
-- Přihlašovací systém
-  - Login / registrace
-  - Administrace
-- Úprava příspěvků
-  - Přihlášenými uživateli nebo heslem
-- Notifikace přes e-mail
-- Pokročilé filtrování, vyhledávání v případě větší DB
+- Přihlašovací systém D
+  - Login / registrace D
+  - Administrace N
+- Úprava příspěvků N
+  - Přihlášenými uživateli nebo heslem N
+- Notifikace přes e-mail N
 
 ---
 
