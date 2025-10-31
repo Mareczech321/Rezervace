@@ -24,7 +24,6 @@
   - [Instalace](#instalace)
 - [Použití](#použití)
 - [Struktura projektu](#struktura-projektu)
-- [Možné změny](#Možné-změny)
 - [Přispívání](#příspívání)
 - [Licence](#licence)
 - [Kontakt](#Kontakt)
@@ -99,12 +98,6 @@ git clone https://github.com/Mareczech321/Rezervace.git
 
 ---
 
-## Možné změny
-
-- Úprava příspěvků N
-  - Přihlášenými uživateli nebo heslem N
-
----
 
 ## Příspívání
 
