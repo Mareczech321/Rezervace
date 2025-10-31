@@ -63,12 +63,17 @@ h2 {
     width: fit-content;
     text-align: center;
     margin: auto;
+    z-index: 100;
 }
 
 section p {
     margin: auto;
     padding: 15px;
     padding-left: 100px;
+}
+
+#login {
+    font-size: 1rem;
 }
 
 table {
@@ -139,12 +144,9 @@ label {
 }
 
 input, button {
-    margin-bottom: 15px;
     padding: 8px 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    font-size: 1rem;
-    width: 250px;
     transition: border-color 0.2s ease;
 }
 
@@ -178,6 +180,9 @@ button:hover {
     min-width: 220px;
 }
 
+#registrace .floating-label{
+    max-height: 65px;
+}
 
 .floating-label input {
     width: 100%;
@@ -279,7 +284,7 @@ input[type="submit"]:hover {
     padding: 15px 5px;
 }
 
-#show {
+#show, #show2 {
     position: relative;
     width: 20px;
     float: right;
@@ -328,4 +333,208 @@ input[type="submit"]:hover {
 
 #register-link:hover {
     text-decoration: underline;
+}
+
+.uprava img {
+    height: 20px;
+    cursor: pointer;
+    z-index: 1;
+    margin: 0 2px;
+}
+
+#rez_pass_input label {
+    font-size: 0.9rem;
+}
+
+#hide input[type="submit"], #hide input[type="button"] {
+    cursor: pointer;
+}
+
+#hide input {
+  width: 20px;
+  height: 20px;
+  border: none;
+  background-color: transparent;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  text-indent: -9999px;
+  overflow: hidden;
+  padding: 0;
+  margin: 0 3px;
+}
+
+#hide {
+    margin: auto;
+    padding: 5px 15px;
+}
+
+.rez_id {
+    display: none;
+}
+
+.uprava {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.uprava input[type="submit"] {
+  width: 20px;
+  height: 20px;
+  border: none;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+  text-indent: -9999px;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+}
+
+.uprava input[type="submit"], .uprava input[type="button"] {
+    filter: none;
+    transition: filter 0.2s ease;
+}
+
+.uprava input[type="submit"]:hover, .uprava input[type="button"]:hover {
+  transform: scale(1.15);
+}
+
+.unlock_hide {
+        display: inline-block !important;
+        width: auto !important;
+        height: auto !important;
+        text-indent: 0 !important;
+        overflow: visible !important;
+        padding: 8px 10px !important;
+        font-size: 1rem !important;
+}
+
+.uprava input[name="upravit-form"] {
+  background: url("img/pencil.png");
+}
+
+.uprava input[name="upravit-form"]:hover {
+  filter: brightness(0) saturate(100%) invert(46%) sepia(78%) saturate(523%) hue-rotate(83deg) brightness(95%) contrast(92%);
+}
+
+.uprava input[name="smazat-form"] {
+  background: url("img/trash-can.png");
+}
+
+.uprava input[name="smazat-form"]:hover {
+  filter: brightness(0) saturate(100%) invert(15%) sepia(94%) saturate(7498%) hue-rotate(1deg) brightness(103%) contrast(105%);
+}
+
+.uprava input[name="odemknout"] {
+  background: url("img/lock.png");
+}
+
+.uprava input[name="odemknout"]:hover {
+    filter: brightness(0) saturate(100%) invert(43%) sepia(62%) saturate(662%) hue-rotate(175deg) brightness(94%) contrast(92%);
+}
+
+#unlock_rez_id {
+    display: none;
+}
+
+.unlock_rez_class {
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+    width: 120px;
+    box-sizing: border-box;
+    margin-left: 5px;
+    position: static;
+    overflow: visible !important;
+    text-indent: 5px !important;
+    cursor: text;
+}
+
+.key {
+    background: url("img/key-yellow.png");
+}
+
+#send-edit {
+    background: url("./img/send.png");
+    width: 20px;
+    height: 20px;
+    border: none;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    cursor: pointer;
+    border-radius: 10px;
+    margin-top: 5px;
+    margin-left: -55px;
+    transition: filter 0.2s ease;
+}
+
+#send-edit:hover {
+    filter: brightness(0) saturate(100%) invert(22%) sepia(87%) saturate(740%) hue-rotate(88deg) brightness(85%) contrast(95%);
+    transform: scale(1.15);
+}
+
+#cancel {
+    background: url("./img/x.png");
+    background-size: cover;
+    height: 20px;
+    width: 20px;
+    position: relative;
+    margin: 5px -55px 5px 10px;
+    transition: filter 0.2s ease;
+}
+
+#cancel:hover {
+    filter: brightness(0) saturate(100%) invert(10%) sepia(96%) saturate(4100%) hue-rotate(345deg) brightness(75%) contrast(90%);
+    transform: scale(1.15);
+}
+
+.uprava {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 5px 5px;
+    margin: auto;
+}
+
+#edit-form td {
+    vertical-align: middle;
+    text-align: center;
+    padding: 0;
+    height: 60px;
+}
+
+#edit-form select {
+    width: 100%;
+    padding: 20px 10px;
+    padding-bottom: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    background-color: transparent;
+    appearance: none;
+}
+
+#edit-form input[type="text"] {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+    padding: 6px 10px;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    line-height: normal;
+    box-sizing: border-box;
+    height: 32px;
+    font-size: 0.95rem;
+}
+
+#edit-form input[type='time'] {
+    max-width: 50px;
 }

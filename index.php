@@ -1,81 +1,25 @@
 <?php
 
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+        $_SESSION['unlock'] = [false, 0];
+    }
 
     include 'config/db.php';
-    include 'register/index.php';
-    include 'login/index.php';
-    
-    if (isset($_POST['pridat'], $_POST['id_mistnosti'], $_POST['jmeno'], $_POST['zacatek'], $_POST['konec'], $_POST['datum'])) {
-        $id_mistnosti = $_POST['id_mistnosti'];
-        $cele_jmeno = $_POST['jmeno'];
-        $parts = explode(" ", $cele_jmeno, 2);
-        $jmeno = $parts[0];
-        $prijmeni = isset($parts[1]) ? $parts[1] : '';
-        $zacatek = $_POST['zacatek'];
-        $konec = $_POST['konec'];
-        $datum = $_POST['datum'];
+    include 'account/index.php';
+    include 'sprava/add.php';
+    include 'sprava/delete.php';
+    include 'sprava/unlock.php';
+    include 'sprava/upravit.php';
 
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM rezervace WHERE mistnost_id = ? AND datum = ? AND ((zacatek < ? AND konec > ?) OR (zacatek < ? AND konec > ?) OR (zacatek >= ? AND konec <= ?))");
+    add();
+    delete();
 
-        $stmt->execute([$id_mistnosti, $datum, $konec, $zacatek, $zacatek, $konec, $zacatek, $konec]);
-        $obsazeno = $stmt->fetchColumn();
+    registrace();
+    prihlaseni();
 
-        if ($obsazeno > 0) {
-            die("Místnost je v tomto časovém úseku již rezervovaná!");
-        }
-
-        if (empty($prijmeni)) {
-            die("Prosím zadejte i příjmení.");
-        }
-
-        if ($konec <= $zacatek) {
-            die("Konec musí být později než začátek!");
-        }
-
-        $datum_cas = DateTime::createFromFormat('Y-m-d H:i', $datum . ' ' . $zacatek);
-        $now = new DateTime();
-
-        if ($datum_cas < $now) {
-            die("Rezervace nemůže být v minulosti!");
-        }
-
-        $stmt = $pdo->prepare("INSERT INTO rezervace (mistnost_id, jmeno_osoby, prijmeni_osoby, datum, zacatek, konec) VALUES (?, ?, ?, ?, ?, ?)"); 
-
-        $stmt->execute([$id_mistnosti, $jmeno, $prijmeni, $datum, $zacatek, $konec]);
-    }
-
-    if (isset($_POST['smazat'], $_POST['id'])) {
-        $id = $_POST['id'];
-
-        $stmt = $pdo->prepare("DELETE FROM rezervace WHERE id = ?"); 
-
-        $stmt->execute([$id]);
-    }
-
-    if (isset($_POST['login'], $_POST['username'], $_POST['heslo'])) {
-        prihlaseni($_POST['username'], $_POST['heslo']);
-    }
-
-    if (isset($_POST['register'], $_POST['user-reg'], $_POST['pass-reg'], $_POST['email-reg'])) {
-        registrace($_POST['user-reg'], $_POST['pass-reg'], $_POST['email-reg']);
-        $_SESSION['user_id'] = $pdo->lastInsertId();
-        $_SESSION['username'] = $_POST['user-reg'];
-        header("Location: index.php");
-    }
-    
-    if (isset($_SESSION['user_id']) && !isset($_SESSION['username'])) {
-        $stmt = $pdo->prepare("SELECT username FROM users WHERE id = ?");
-        $stmt->execute([$_SESSION['user_id']]);
-        $user = $stmt->fetch();
-        if ($user) {
-            $_SESSION['username'] = $user['username'];
-        }
-    }
-
-    if (isset($_POST['username'], $_POST['heslo'])) {
-        prihlaseni($_POST['username'], $_POST['heslo']);
-    }
+    unlock();
+    edit();
 
 ?>
 
@@ -85,7 +29,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rezervační systém</title>
-    <link rel="stylesheet" href="styly.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="blur-overlay" onclick="zavrit()" style="display: none;"></div>
@@ -118,13 +62,13 @@
             <div class="row">
                 <div class="floating-label">
                     <input type="text" name="username" id="username-login" placeholder=" ">
-                    <label for="username">Uživatelské jméno</label>
+                    <label for="username-login">Uživatelské jméno</label>
                 </div>
             </div>
             <div class="row">
                 <div class="floating-label">
                     <input type="password" name="heslo" id="heslo-login" placeholder=" ">
-                    <label for="heslo">Heslo</label>
+                    <label for="heslo-login">Heslo</label>
                     <img src="./img/eye.png" alt="" onclick="showPass()" id="show">
                 </div>
             </div>
@@ -147,6 +91,7 @@
                 <div class="floating-label">
                     <input type="password" name="pass-reg" id="pass-reg" placeholder=" ">
                     <label for="pass-reg">Heslo</label>
+                    <img src="./img/eye.png" alt="" onclick="showPass2()" id="show2">
                 </div>
             </div>
             <div class="row">
@@ -162,13 +107,15 @@
     <section id="rezervovane">
         <?php 
         
-            if (isset($_POST['pridat'])) {
-                $lastId = $pdo->lastInsertId();
-                echo "<p style='color:lime;'>Rezervace #{$lastId} byla úspěšně přidána!</p>";
+            if (isset($_SESSION['msg'])) {
+                if ($_SESSION['error']){
+                    echo "<p style='color: red;'>{$_SESSION['msg']}</p>";
+                }else {
+                    echo "<p style='color: lime;'>{$_SESSION['msg']}</p>";
+                }
+                $_SESSION['error'] = false;
+                unset($_SESSION['msg']);
             }
-        if (isset($_POST['smazat'], $_POST['id'])) {
-            echo "<p style='color:lime;'>Rezervace #" . htmlspecialchars($_POST['id']) . " byla úspěšně smazána!</p>";
-        }
         
         ?>
         <h2>Rezervované místnosti</h2>
@@ -176,22 +123,88 @@
 
             $reserved = 0;
 
-            $stmt = $pdo->query("SELECT rezervace.id, mistnosti.nazev_mistnosti, DATE_FORMAT(rezervace.datum, '%d. %m.') AS datum_formatted, DATE_FORMAT(rezervace.zacatek, '%H:%i') AS zacatek, DATE_FORMAT(rezervace.konec, '%H:%i') AS konec, rezervace.prijmeni_osoby FROM rezervace JOIN mistnosti ON rezervace.mistnost_id = mistnosti.id ORDER BY rezervace.datum ASC, rezervace.zacatek ASC");
+            $stmt = $pdo->query("SELECT rezervace.id, mistnosti.nazev_mistnosti, DATE_FORMAT(rezervace.datum, '%d. %m.') AS datum_formatted, DATE_FORMAT(rezervace.zacatek, '%H:%i') AS zacatek, DATE_FORMAT(rezervace.konec, '%H:%i') AS konec, rezervace.prijmeni_osoby, rezervace.heslo FROM rezervace JOIN mistnosti ON rezervace.mistnost_id = mistnosti.id ORDER BY rezervace.datum ASC, rezervace.zacatek ASC");
 
             $rezervace = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             if (count($rezervace) > 0) {
-                echo "<table>";
-                echo "<tr><th>ID</th><th>Místnost</th><th>Datum</th><th>Čas</th><th>Zarezervoval</th></tr>";
+                echo "<table id='seznam_rez'>";
+                echo "<tr>
+                        <th>ID</th>
+                        <th>Místnost</th>
+                        <th>Datum</th>
+                        <th>Čas</th>
+                        <th>Zarezervoval</th>
+                        <th>Akce</th>
+                      </tr>";
+
                 foreach ($rezervace as $rezervaceItem) {
                     $rowClass = ($reserved % 2 == 0) ? 'odd' : 'even';
-                    echo "<tr class='{$rowClass}'>";
-                    echo "<td>" . htmlspecialchars($rezervaceItem['id']) . "</td>";
-                    echo "<td>" . htmlspecialchars($rezervaceItem['nazev_mistnosti']) . "</td>";
-                    echo "<td>" . htmlspecialchars($rezervaceItem['datum_formatted']) . "</td>";
-                    echo "<td>" . htmlspecialchars($rezervaceItem['zacatek']) . " - " . htmlspecialchars($rezervaceItem['konec']) . "</td>";
-                    echo "<td>" . htmlspecialchars($rezervaceItem['prijmeni_osoby']) . "</td>";
-                    echo "</tr>";
+
+                    echo "<tr class='{$rowClass}' id='rezervace" . $rezervaceItem['id'] . "' ";
+
+                    $unlocked = $_SESSION['unlock'][0] && $rezervaceItem['id'] == $_SESSION['unlock'][1];
+
+                    if ($unlocked){
+                        echo "style='background: red; color: white;'";
+                    }                    
+                    echo "><td>" . htmlspecialchars($rezervaceItem['id']) . "</td>";
+
+                    if ($unlocked){
+                        echo "
+                                <form method='POST' id='edit-form'>
+                                    <td>
+                                        <div class='floating-label' style='background: #ffffff; border-radius: 6px;'>
+                                            <select name='edit-room' id='edit-room' required>";
+
+                                                $stmt = $pdo->query("SELECT id, nazev_mistnosti FROM mistnosti");
+                                                $mistnosti = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                                foreach ($mistnosti as $m) {
+                                                    $selected = ($m['nazev_mistnosti'] === $rezervaceItem['nazev_mistnosti']) ? "selected" : "";
+                                                    echo "<option value='{$m['id']}' {$selected}>{$m['nazev_mistnosti']}</option>";
+                                                }
+
+                        echo                "</select>
+                                        </div>
+                                    </td>                                    
+                                    <td>
+                                        <input type='date' value='" . htmlspecialchars($rezervaceItem['datum_formatted']) . "'>
+                                    </td>
+                                    <td>
+                                        <input type='time' value='" . htmlspecialchars($rezervaceItem['zacatek']) . "'>
+                                        <input type='time' value='" . htmlspecialchars($rezervaceItem['konec']) . "'>
+                                    </td>
+                                    <td>
+                                        " . htmlspecialchars($rezervaceItem['prijmeni_osoby']) . "
+                                    </td>
+                                    <td>
+                                        <div class='uprava'>
+                                            <input type='submit' value=' ' name='send-edit' title='Potvrdit změny' id='send-edit'>
+                                            <input type='submit' value=' ' name='cancel' title='Zrušit změny' id='cancel'>     
+                                        </div>
+                                    </td>
+                                </form>
+                              </tr>";
+                    }else{
+                        echo "<td>" . htmlspecialchars($rezervaceItem['nazev_mistnosti']) . "</td>
+                            <td>" . htmlspecialchars($rezervaceItem['datum_formatted']) . "</td>
+                            <td>" . htmlspecialchars($rezervaceItem['zacatek']) . " - " . htmlspecialchars($rezervaceItem['konec']) . "</td>
+                            <td>" . htmlspecialchars($rezervaceItem['prijmeni_osoby']) . "</td>";
+                    
+                        echo "<td>
+                                <form method='POST' id='hide'>
+                                <div class='uprava'>
+                                    <input type='hidden' name='rez_id' value=" . $rezervaceItem['id'] . ">
+                                    <input type='submit' name='upravit-form' value='Upravit' title='Upravit' class='icons" . $rezervaceItem['id'] . "'>
+                                    <input type='submit' name='smazat-form' value='Smazat' title='Smazat'  class='icons" . $rezervaceItem['id'] . "'>";
+                        if (!empty($rezervaceItem['heslo'])) {
+                            echo "<input type='button' name='odemknout' value='Odemknout' title='Odemknout pro úpravy' onclick='unlock(" . $rezervaceItem['id'] . ")' id='" . $rezervaceItem['id'] . "'>
+                                <input type='text' name='unlock_rez' id='unlock_rez" . $rezervaceItem['id'] . "' style='display: none;' class='unlock_rez_class'>
+                                <input type='submit' name='unlockFR' value='' title='Odemknout' id='key" . $rezervaceItem['id'] . "' class='key' style='display: none;'>";
+                        }
+                        echo "</div></form></td></tr>";
+                    }
+
                     $reserved++;
                 }
                 echo "</table>";
@@ -213,7 +226,11 @@
 
             if (count($mistnosti) > 0) {
                 echo "<table>";
-                echo "<tr><th>ID místnosti</th><th>Název místnosti</th><th>Kapacita</th></tr>";
+                echo "<tr>
+                        <th>ID místnosti</th>
+                        <th>Název místnosti</th>
+                        <th>Kapacita</th>
+                      </tr>";
                 foreach ($mistnosti as $mistnost) {
                     if ($rooms % 2 == 0) {
                         echo "<tr class='odd'>";
@@ -274,7 +291,15 @@
                     <input type="date" name="datum" id="datum" placeholder=" " required>
                     <label for="datum">Datum</label>
                 </div>
-                <input type="submit" value="Přidat rezervaci" name="pridat">
+                <div class="floating-label" id="rez_pass_input">
+                    <input type="text" name="heslo_rezervace" placeholder=" " id="heslo_rezervace">
+                    <label for="heslo_rezervace">Heslo pro úpravu (nepovinné)</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="floating-label">
+                    <input type="submit" value="Přidat rezervaci" name="pridat">
+                </div>
             </div>
             </form>
 
@@ -335,10 +360,43 @@ function showPass() {
     }
 }
 
+function showPass2() {
+    var passField = document.getElementById("pass-reg");
+    var showIcon = document.getElementById("show2");
+    if (passField.type === "password") {
+        passField.type = "text";
+        showIcon.src = "./img/hidden.png";
+    } else {
+        passField.type = "password";
+        showIcon.src = "./img/eye.png";
+    }
+}
+
 function odhlasit() {
     fetch('logout.php', {method: 'POST'}).then(() => {
-        window.location.href = 'index.php';
+        window.location.href = './';
     });
+}
+
+function unlock(id) {
+    const icons = document.getElementsByClassName('icons' + id);
+    const textField = document.getElementById('unlock_rez' + id);
+    const key = document.getElementById('key' + id);
+
+    for (const element of icons) {
+        const isVisible = getComputedStyle(element).display !== 'none';
+        element.style.display = isVisible ? 'none' : 'block';
+    }
+    if (textField.style.display === "none"){
+        key.style.display = "block";
+
+        textField.style.display = "block";
+        textField.style.border = "1px solid #ccc";
+        textField.style.width = "150px";
+        textField.style.height = "20px";
+    }else{
+        textField.style.display = "none";
+    }
 }
 
 </script>
