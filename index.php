@@ -2,7 +2,15 @@
 
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
+    }
+
+    
+    if (!isset($_SESSION['unlock'])) {
         $_SESSION['unlock'] = [false, 0];
+    }
+
+    if (!isset($_SESSION['error'])){
+        $_SESSION['error'] = false;
     }
 
     include 'config/db.php';
@@ -29,7 +37,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rezervační systém</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="main.css">
+    <link rel="shortcut icon" href="img/placeholder.png" type="image/x-icon">
 </head>
 <body>
     <div id="blur-overlay" onclick="zavrit()" style="display: none;"></div>
@@ -57,7 +66,7 @@
 
     <section>
         <form method="POST" id="prihlaseni">         
-            <button onclick="zavrit()" class="zavrit" style="position: absolute; top: 5px; right: -100px; background: none;">✕</button>   
+            <button onclick="zavrit()" class="zavrit" style="position: absolute; top: 5px; background: none;">✕</button>   
             <h3 style="text-align: center;">Přihlášení</h3>
             <div class="row">
                 <div class="floating-label">
@@ -75,11 +84,13 @@
             <div class="row" id="register-link">
                 <a onclick="registrace()" id="create-acc">Nemáte účet? Zaregistrujte se zde.</a>
             </div>
-            <input type="submit" value="Přihlásit se" name="login" id="login-btn">
+            <div class='row'>
+                <input type="submit" value="Přihlásit se" name="login" id="login-btn">
+            </div>
         </form>
 
         <form method="POST" id="registrace">
-            <button onclick="zavrit()" class="zavrit" style="position: absolute; top: 5px; right: -100px; background: none;">✕</button>
+            <button onclick="zavrit()" class="zavrit" style="position: absolute; top: 5px; background: none;">✕</button>
             <h3 style="text-align: center;">Registrace</h3>
             <div class="row">
                 <div class="floating-label">
@@ -100,7 +111,9 @@
                     <label for="email-reg">E-mail</label>
                 </div>
             </div>
-            <input type="submit" value="Registrovat se" name="register">
+            <div class='row'>
+                <input type="submit" value="Registrovat se" name="register" id="register-btn">
+            </div>
         </form>
     
 
@@ -123,7 +136,20 @@
 
             $reserved = 0;
 
-            $stmt = $pdo->query("SELECT rezervace.id, mistnosti.nazev_mistnosti, DATE_FORMAT(rezervace.datum, '%d. %m.') AS datum_formatted, DATE_FORMAT(rezervace.zacatek, '%H:%i') AS zacatek, DATE_FORMAT(rezervace.konec, '%H:%i') AS konec, rezervace.prijmeni_osoby, rezervace.heslo FROM rezervace JOIN mistnosti ON rezervace.mistnost_id = mistnosti.id ORDER BY rezervace.datum ASC, rezervace.zacatek ASC");
+            $stmt = $pdo->query("
+                                SELECT 
+                                    rezervace.id, 
+                                    mistnosti.nazev_mistnosti, 
+                                    DATE_FORMAT(rezervace.datum, '%d. %m.') AS datum_formatted, 
+                                    rezervace.datum AS datum_iso,
+                                    DATE_FORMAT(rezervace.zacatek, '%H:%i') AS zacatek, 
+                                    DATE_FORMAT(rezervace.konec, '%H:%i') AS konec, 
+                                    rezervace.prijmeni_osoby, 
+                                    rezervace.heslo 
+                                FROM rezervace 
+                                JOIN mistnosti ON rezervace.mistnost_id = mistnosti.id 
+                                ORDER BY rezervace.datum ASC, rezervace.zacatek ASC
+                            ");
 
             $rezervace = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -152,39 +178,39 @@
 
                     if ($unlocked){
                         echo "
-                                <form method='POST' id='edit-form'>
-                                    <td>
-                                        <div class='floating-label' style='background: #ffffff; border-radius: 6px;'>
-                                            <select name='edit-room' id='edit-room' required>";
+                            <form method='POST' id='edit-form'>
+                                <input type='hidden' name='edit-id' value='{$rezervaceItem['id']}'>
+                                <td>
+                                    <div class='floating-label' style='background: #ffffff; border-radius: 6px;'>
+                                        <select name='edit-room' id='edit-room' required>";
+                                        
+                                            $stmt = $pdo->query("SELECT id, nazev_mistnosti FROM mistnosti");
+                                            $mistnosti = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                            foreach ($mistnosti as $m) {
+                                                $selected = ($m['nazev_mistnosti'] === $rezervaceItem['nazev_mistnosti']) ? "selected" : "";
+                                                echo "<option value='{$m['id']}' {$selected}>{$m['nazev_mistnosti']}</option>";
+                                            }
 
-                                                $stmt = $pdo->query("SELECT id, nazev_mistnosti FROM mistnosti");
-                                                $mistnosti = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                                                foreach ($mistnosti as $m) {
-                                                    $selected = ($m['nazev_mistnosti'] === $rezervaceItem['nazev_mistnosti']) ? "selected" : "";
-                                                    echo "<option value='{$m['id']}' {$selected}>{$m['nazev_mistnosti']}</option>";
-                                                }
-
-                        echo                "</select>
-                                        </div>
-                                    </td>                                    
-                                    <td>
-                                        <input type='date' value='" . htmlspecialchars($rezervaceItem['datum_formatted']) . "'>
-                                    </td>
-                                    <td>
-                                        <input type='time' value='" . htmlspecialchars($rezervaceItem['zacatek']) . "'>
-                                        <input type='time' value='" . htmlspecialchars($rezervaceItem['konec']) . "'>
-                                    </td>
-                                    <td>
-                                        " . htmlspecialchars($rezervaceItem['prijmeni_osoby']) . "
-                                    </td>
-                                    <td>
-                                        <div class='uprava'>
-                                            <input type='submit' value=' ' name='send-edit' title='Potvrdit změny' id='send-edit'>
-                                            <input type='submit' value=' ' name='cancel' title='Zrušit změny' id='cancel'>     
-                                        </div>
-                                    </td>
-                                </form>
-                              </tr>";
+                        echo           "</select>
+                                    </div>
+                                </td>                                    
+                                <td>
+                                    <input type='date' name='edit-date' value='" . htmlspecialchars($rezervaceItem['datum_iso']) . "' required>
+                                </td>
+                                <td>
+                                    <input type='time' name='edit-zacatek' value='" . htmlspecialchars($rezervaceItem['zacatek']) . "' required>
+                                    <input type='time' name='edit-konec' value='" . htmlspecialchars($rezervaceItem['konec']) . "' required>
+                                </td>
+                                <td>" . htmlspecialchars($rezervaceItem['prijmeni_osoby']) . "</td>
+                                <td>
+                                    <div class='uprava' id='edit-unlocked'>
+                                        <input type='submit' value=' ' name='send-edit' title='Potvrdit změny' id='send-edit'>
+                                        <input type='submit' value=' ' name='cancel' title='Zrušit změny' id='cancel'>
+                                        <input type='submit' value=" . $rezervaceItem['id'] . " name='deleteUnlocked' title='Smazat rezervaci' id='deleteUnlocked'> 
+                                    </div>
+                                </td>
+                            </form>
+                        </tr>";
                     }else{
                         echo "<td>" . htmlspecialchars($rezervaceItem['nazev_mistnosti']) . "</td>
                             <td>" . htmlspecialchars($rezervaceItem['datum_formatted']) . "</td>
@@ -194,13 +220,25 @@
                         echo "<td>
                                 <form method='POST' id='hide'>
                                 <div class='uprava'>
-                                    <input type='hidden' name='rez_id' value=" . $rezervaceItem['id'] . ">
-                                    <input type='submit' name='upravit-form' value='Upravit' title='Upravit' class='icons" . $rezervaceItem['id'] . "'>
-                                    <input type='submit' name='smazat-form' value='Smazat' title='Smazat'  class='icons" . $rezervaceItem['id'] . "'>";
+                                    <input type='hidden' name='rez_id' value=" . $rezervaceItem['id'] . ">";
+                                    if (!empty($rezervaceItem['heslo'])) {
+                                        echo "<input type='submit' name='upravit-form' value=' ' title='Upravit' class='icons" . $rezervaceItem['id'] . "'>";
+                                    } else {
+                                        echo "<input type='submit' name='upravit-bez-hesla' value=' ' title='Upravit' class='icons" . $rezervaceItem['id'] . "'>";
+                                    }
+                                echo "<input type='submit' name='smazat-form' value='Smazat' title='Smazat'  class='icons" . $rezervaceItem['id'] . "'>";
                         if (!empty($rezervaceItem['heslo'])) {
-                            echo "<input type='button' name='odemknout' value='Odemknout' title='Odemknout pro úpravy' onclick='unlock(" . $rezervaceItem['id'] . ")' id='" . $rezervaceItem['id'] . "'>
-                                <input type='text' name='unlock_rez' id='unlock_rez" . $rezervaceItem['id'] . "' style='display: none;' class='unlock_rez_class'>
-                                <input type='submit' name='unlockFR' value='' title='Odemknout' id='key" . $rezervaceItem['id'] . "' class='key' style='display: none;'>";
+                            $checkOwner = $pdo->prepare("SELECT id_uzivatele FROM rezervace WHERE id = ?");
+                            $checkOwner->execute([$rezervaceItem['id']]);
+                            $row = $checkOwner->fetch(PDO::FETCH_ASSOC);
+
+                            $jeVlastnik = isset($_SESSION['user_id']) && $row && ($_SESSION['user_id'] == $row['id_uzivatele']);
+
+                            if (!$jeVlastnik) {
+                                echo "<input type='button' name='odemknout' value='Odemknout' title='Odemknout pro úpravy' onclick='unlock(" . $rezervaceItem['id'] . ")' id='" . $rezervaceItem['id'] . "'>
+                                    <input type='text' name='unlock_rez' id='unlock_rez" . $rezervaceItem['id'] . "' style='display: none;' class='unlock_rez_class'>
+                                    <input type='submit' name='unlockFR' value='' title='Odemknout' id='key" . $rezervaceItem['id'] . "' class='key' style='display: none;'>";
+                            }
                         }
                         echo "</div></form></td></tr>";
                     }

@@ -24,21 +24,21 @@
 
             if ($obsazeno > 0) {
                 $_SESSION['msg'] = "Místnost je v tomto časovém úseku již rezervovaná!";
-                $_SESSION = true;
+                $_SESSION['error'] = true;
                 header("Location: ./");
                 exit;
             }
 
             if (empty($prijmeni)) {
                 $_SESSION['msg'] = "Prosím zadejte i příjmení.";
-                $_SESSION = true;
+                $_SESSION['error'] = true;
                 header("Location: ./");
                 exit;
             }
 
             if ($konec <= $zacatek) {
                 $_SESSION['msg'] = "Konec musí být později než začátek!";
-                $_SESSION = true;
+                $_SESSION['error'] = true;
                 header("Location: ./");
                 exit;
             }
@@ -48,7 +48,7 @@
 
             if ($datum_cas < $now) {
                 $_SESSION['msg'] = "Rezervace nemůže být v minulosti!";
-                $_SESSION = true;
+                $_SESSION['error'] = true;
                 header("Location: ./");
                 exit;
             }
@@ -57,7 +57,7 @@
                 $heslo_rez = $_POST["heslo_rezervace"];
 
                 if (isset($_SESSION['user_id'])){
-                    $stmt = $pdo->prepare("INSERT INTO rezervace (mistnost_id, jmeno_osoby, prijmeni_osoby, datum, zacatek, konec, ID_uzivatele, heslo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"); 
+                    $stmt = $pdo->prepare("INSERT INTO rezervace (mistnost_id, jmeno_osoby, prijmeni_osoby, datum, zacatek, konec, id_uzivatele, heslo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"); 
                     $stmt->execute([$id_mistnosti, $jmeno, $prijmeni, $datum, $zacatek, $konec, $_SESSION['user_id'], $heslo_rez]);
                 }else{
                     $stmt = $pdo->prepare("INSERT INTO rezervace (mistnost_id, jmeno_osoby, prijmeni_osoby, datum, zacatek, konec, heslo) VALUES (?, ?, ?, ?, ?, ?, ?)"); 
@@ -71,7 +71,7 @@
             }
 
             if (isset($_SESSION['user_id'])){
-                $stmt = $pdo->prepare("INSERT INTO rezervace (mistnost_id, jmeno_osoby, prijmeni_osoby, datum, zacatek, konec, ID_uzivatele) VALUES (?, ?, ?, ?, ?, ?, ?)"); 
+                $stmt = $pdo->prepare("INSERT INTO rezervace (mistnost_id, jmeno_osoby, prijmeni_osoby, datum, zacatek, konec, id_uzivatele) VALUES (?, ?, ?, ?, ?, ?, ?)"); 
                 $stmt->execute([$id_mistnosti, $jmeno, $prijmeni, $datum, $zacatek, $konec, $_SESSION['user_id']]);
             }else {
                 $stmt = $pdo->prepare("INSERT INTO rezervace (mistnost_id, jmeno_osoby, prijmeni_osoby, datum, zacatek, konec) VALUES (?, ?, ?, ?, ?, ?)");

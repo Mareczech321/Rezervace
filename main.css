@@ -144,7 +144,6 @@ label {
 }
 
 input, button {
-    padding: 8px 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
     transition: border-color 0.2s ease;
@@ -281,7 +280,7 @@ input[type="submit"]:hover {
     display: inline;
     float: right;
     margin: 0;
-    padding: 15px 5px;
+    padding: 15px 25px;
 }
 
 #show, #show2 {
@@ -309,6 +308,24 @@ input[type="submit"]:hover {
     border-radius: 15px;
     padding: 30px 40px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+#prihlaseni input{
+    margin-bottom: 15px;
+}
+
+#registrace input {
+    margin-bottom: 15px;
+}
+
+#login-btn, #register-btn {
+    margin: auto;
+    font-size: 0.8rem;
+}
+
+.zavrit {
+    position: relative;
+    right: 10px;
 }
 
 #blur-overlay {
@@ -404,33 +421,43 @@ input[type="submit"]:hover {
 }
 
 .unlock_hide {
-        display: inline-block !important;
-        width: auto !important;
-        height: auto !important;
-        text-indent: 0 !important;
-        overflow: visible !important;
-        padding: 8px 10px !important;
-        font-size: 1rem !important;
+    display: inline-block !important;
+    width: auto !important;
+    height: auto !important;
+    text-indent: 0 !important;
+    overflow: visible !important;
+    padding: 8px 10px !important;
+    font-size: 1rem !important;
 }
 
-.uprava input[name="upravit-form"] {
-  background: url("img/pencil.png");
+.uprava input[name="upravit-form"], .uprava input[name="upravit-bez-hesla"] {
+  background-image: url("./img/pencil.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: none;
+  width: 20px;
+  height: 20px;
+  text-indent: -9999px;
+  overflow: hidden;
+  cursor: pointer;
 }
 
-.uprava input[name="upravit-form"]:hover {
-  filter: brightness(0) saturate(100%) invert(46%) sepia(78%) saturate(523%) hue-rotate(83deg) brightness(95%) contrast(92%);
+
+.uprava input[name="upravit-form"]:hover, .uprava input[name="upravit-bez-hesla"]:hover { 
+    filter: brightness(0) saturate(100%) invert(46%) sepia(78%) saturate(523%) hue-rotate(83deg) brightness(95%) contrast(92%);
 }
 
 .uprava input[name="smazat-form"] {
-  background: url("img/trash-can.png");
+    background: url("img/trash-can.png");
 }
 
 .uprava input[name="smazat-form"]:hover {
-  filter: brightness(0) saturate(100%) invert(15%) sepia(94%) saturate(7498%) hue-rotate(1deg) brightness(103%) contrast(105%);
+    filter: brightness(0) saturate(100%) invert(15%) sepia(94%) saturate(7498%) hue-rotate(1deg) brightness(103%) contrast(105%);
 }
 
 .uprava input[name="odemknout"] {
-  background: url("img/lock.png");
+    background: url("img/lock.png");
 }
 
 .uprava input[name="odemknout"]:hover {
@@ -473,6 +500,8 @@ input[type="submit"]:hover {
     margin-top: 5px;
     margin-left: -55px;
     transition: filter 0.2s ease;
+    position: relative;
+    right: 30px;
 }
 
 #send-edit:hover {
@@ -488,6 +517,23 @@ input[type="submit"]:hover {
     position: relative;
     margin: 5px -55px 5px 10px;
     transition: filter 0.2s ease;
+    right: 30px;
+}
+
+#deleteUnlocked {
+    background: url("./img/trash-can.png");
+    background-size: cover;
+    height: 20px;
+    width: 20px;
+    position: relative;
+    margin: 5px -55px 5px 10px;
+    transition: filter 0.2s ease;
+    right: -20px;
+}
+
+#deleteUnlocked:hover {
+    filter: brightness(0) saturate(100%) invert(10%) sepia(96%) saturate(4100%) hue-rotate(345deg) brightness(75%) contrast(90%);
+    transform: scale(1.15);
 }
 
 #cancel:hover {
@@ -537,4 +583,24 @@ input[type="submit"]:hover {
 
 #edit-form input[type='time'] {
     max-width: 50px;
+}
+
+#login {
+    all: unset;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: inline-block;
+    background-color: #daa700;
+    color: #000;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 0 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+    top: 0px;
+    right: 5px;
+}
+
+#login:hover {
+    background-color: #ffc400;
 }

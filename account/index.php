@@ -8,18 +8,36 @@
         global $pdo;
 
         if (isset($_POST['register'], $_POST['user-reg'], $_POST['pass-reg'], $_POST['email-reg'])) {
-
+            $username = trim($_POST['user-reg']);
+            $email = trim($_POST['email-reg']);
             $password = password_hash($_POST['pass-reg'], PASSWORD_BCRYPT);
 
-            $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-            $stmt->execute([$_POST['user-reg'], $_POST['email-reg'], $password]);
+            $check = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ? OR email = ?");
+            $check->execute([$username, $email]);
+            if ($check->fetchColumn() > 0) {
+                $_SESSION['msg'] = "Uživatel s tímto jménem nebo e-mailem již existuje.";
+                $_SESSION['error'] = true;
+                header("Location: ./");
+                exit;
+            }
             
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            try {
+            $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+            $stmt->execute([$username, $email, $password]);
 
-            $_SESSION['user_id'] = $user['ID'];
-            $_SESSION['username'] = $user['username'];
+            $_SESSION['user_id'] = $pdo->lastInsertId();
+            $_SESSION['username'] = $username;
+
+            $_SESSION['msg'] = "Registrace byla úspěšná. Jste přihlášen jako <b>{$username}</b>.";
+            $_SESSION['error'] = false;
             header("Location: ./");
             exit;
+        } catch (PDOException $e) {
+            $_SESSION['msg'] = "Došlo k chybě při registraci: " . $e->getMessage();
+            $_SESSION['error'] = true;
+            header("Location: ./");
+            exit;
+        }
         }
     }
 
