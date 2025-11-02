@@ -22,7 +22,7 @@
 - [Požadavky a instalace](#funkce)
   - [Požadavky](#požadavky)
   - [Instalace](#instalace)
-- [Použití](#použití)
+- [O aplikaci](#o-aplikaci)
 - [Struktura projektu](#struktura-projektu)
 - [Přispívání](#příspívání)
 - [Licence](#licence)
@@ -32,7 +32,7 @@
 
 ## Funkce (dle `Zadání.pdf` a něco navíc)
 
-- Vytváření a mazání rezervací  
+- Vytváření, úprava a mazání rezervací  
 - Přehled dostupných a obsazených termínů  
 - Přehledné a responzivní uživatelské rozhraní  
 
@@ -52,9 +52,10 @@
 
 ### XAMPP
 
-- Otevřete složku `htdocs`, tam kde je nainstalovaný XAMPP
+- Otevřete složku `htdocs`, tam kde máte nainstalovaný XAMPP
 - Naklonujte repo z GitHubu
 - Nahrajte DB na localhost
+- Změňte `config\config.php` podle názvu vaší DB na `localhost`
 
 ~~~git
 cd C:\xampp\htdocs
@@ -68,16 +69,21 @@ git clone https://github.com/Mareczech321/Rezervace.git
 
 ---
 
-## Použití
+## O aplikaci
 
-### XAMPP
-
-- Spusťte XAMPP
-- Přejděte na `http://localhost/Rezervace`
-
-### Hosting
-
-- Přejděte na URL vaší stránky
+- Sekce:
+  - Rezervované místnosti - seznam obsazených místností seřezených podle času
+  - Seznam místností - seznam místností a jejich kapacita
+  - Správa rezervací
+- Mazaní rezervací:
+  - Přes `id` (`Správa rezervací`)
+  - Přímo v tabulce rezervací (možnost mazat i zaheslované rezervace)
+- Přidávání rezervací (`Správa rezervací`):
+  - Nepřihlášený uživatel:
+    - Může přidat rezervaci a zaheslovat ji
+  - Přihlášený uživatel:
+    - To samé co nepřihlášení uživatel
+    + Rezervace budou automaticky odemknuty
 
 ---
 
@@ -85,11 +91,20 @@ git clone https://github.com/Mareczech321/Rezervace.git
 
 ~~~plaintext
 └── 📁Rezervace
-    └── 📁config
+    ├── 📁account
+        ├── index.php
+    ├── 📁config
         ├── config.php
         ├── db.php
+    ├── 📁img
+    └── 📁sprava
+        ├── add.php
+        ├── delete.php
+        ├── unlock.php
+        ├── upravit.php
     ├── .gitattributes
     ├── index.php
+    ├── logout.php
     ├── readme.md
     ├── rezervace.sql
     ├── style.css
