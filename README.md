@@ -55,7 +55,7 @@
 
 - Otevřete složku `htdocs`, tam kde máte nainstalovaný XAMPP
 - Naklonujte repo z GitHubu
-- Nahrajte DB na localhost
+- Nahrajte DB `rezervace` na localhost
 - Změňte `config\config.php` podle názvu vaší DB na `localhost`
 
 ~~~git
