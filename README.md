@@ -58,8 +58,7 @@
 - Nahrajte DB `rezervace` na localhost
 - Změňte `config\config.php` podle názvu vaší DB na `localhost`
 
-```
-# ===== git =====
+```git
 cd C:\xampp\htdocs
 git clone https://github.com/Mareczech321/Rezervace.git
 ```
