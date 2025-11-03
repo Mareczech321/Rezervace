@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 02, 2025 at 09:19 PM
+-- Generation Time: Nov 03, 2025 at 05:20 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -20,6 +20,33 @@ SET time_zone = "+00:00";
 --
 -- Database: `reservations`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `mistnosti`
+--
+
+CREATE TABLE `mistnosti` (
+  `id` int(11) NOT NULL,
+  `nazev_mistnosti` varchar(100) NOT NULL,
+  `kapacita` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `mistnosti`
+--
+
+INSERT INTO `mistnosti` (`id`, `nazev_mistnosti`, `kapacita`) VALUES
+(1, 'Konferenční místnost 1', 10),
+(2, 'Konferenční místnost 2', 20),
+(3, 'Zasedací místnost 1', 6),
+(4, 'Zasedací místnost 2', 8),
+(5, 'Školící místnost', 25),
+(6, 'Relaxační místnost', 12),
+(7, 'Místnost projektového týmu A', 8),
+(8, 'Místnost projektového týmu B', 10),
+(9, 'Kreativní místnost', 15);
 
 -- --------------------------------------------------------
 
@@ -65,9 +92,37 @@ INSERT INTO `rezervace` (`id`, `mistnost_id`, `jmeno_osoby`, `prijmeni_osoby`, `
 (19, 8, 'Jakub', 'Doležal', '2025-11-02', '19:00:00', '20:00:00', '', NULL),
 (20, 2, 'Petr', 'Černý', '2025-11-02', '08:00:00', '09:00:00', '', NULL);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `ID` int(11) NOT NULL,
+  `username` varchar(20) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`ID`, `username`, `email`, `password`) VALUES
+(1, 'BetaTester', 'Beta@tester', '$2y$10$f42d9B96aOGsUpYmCADPmeo0dnFm/wLIVVAE7/NL4..qM35QqHScG'),
+(2, 'Admin', 'admin@admin', '$2y$10$5K5HbRE0DoyV.AuM0S6S6OIct6/QZYBfBZ8XZkSyF/4OnKPEUIKYu'),
+(3, 'User123', 'user@user', '$2y$10$q.AS2p4v9AAAIyagoy7UdeZRfQf/77TvzTHSzcp2vMqDdLBnlM8EO');
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `mistnosti`
+--
+ALTER TABLE `mistnosti`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `rezervace`
@@ -78,14 +133,34 @@ ALTER TABLE `rezervace`
   ADD KEY `fk_rezervace_uzivatel` (`id_uzivatele`);
 
 --
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`ID`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `username` (`username`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `mistnosti`
+--
+ALTER TABLE `mistnosti`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `rezervace`
 --
 ALTER TABLE `rezervace`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints for dumped tables
