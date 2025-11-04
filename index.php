@@ -37,7 +37,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rezervační systém</title>
-    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="main.css?v=2">
     <link rel="shortcut icon" href="img/placeholder.png" type="image/x-icon">
 </head>
 <body>

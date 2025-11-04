@@ -604,3 +604,22 @@ input[type="submit"]:hover {
 #login:hover {
     background-color: #ffc400;
 }
+
+/*======== Mac ==========*/
+@media screen and (min-width: 1080px) and (max-width: 1919px) {
+    nav {
+        position: relative;
+        right: -100px;
+    }
+}
+
+
+/*======== Phone ==========*/
+@media screen and (max-width: 767px) {
+  
+}
+
+/*======== Tablet ==========*/
+@media screen and (min-width: 768px) and (max-width: 1024px) {
+  
+}
