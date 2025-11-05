@@ -43,7 +43,7 @@
 <body>
     <div id="blur-overlay" onclick="zavrit()" style="display: none;"></div>
     <header>
-        <div id="header-top">
+        <div id="header">
             <h1>Systém rezervování místností</h1>
             <?php
 

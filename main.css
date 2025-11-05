@@ -4,6 +4,7 @@ body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
+/*======== Header ========*/
 header {
     position: sticky;
     top: 0;
@@ -40,6 +41,16 @@ nav a:hover {
     background-color: #e0a800;
 }
 
+#header button {
+    position: relative;
+    bottom: -5px;
+    display: inline;
+    float: right;
+    margin: 0;
+    padding: 15px 25px;
+}
+
+/*======== Jednotlive sekce ========*/
 section {
     position: relative;
     width: 1250px;
@@ -58,18 +69,39 @@ h2 {
     padding: 15px;
 }
 
+section p {
+    margin: auto;
+    padding: 15px;
+    padding-left: 100px;
+}
+
+#login {
+    all: unset;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    display: inline-block;
+    background-color: #daa700;
+    color: #000;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 0 25px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+    top: 0px;
+    right: 5px;
+}
+
+#login:hover {
+    background-color: #ffc400;
+}
+
+/*======== Sekce - rezervace ========*/
 #rezervace h2 {
     display: block;
     width: fit-content;
     text-align: center;
     margin: auto;
     z-index: 100;
-}
-
-section p {
-    margin: auto;
-    padding: 15px;
-    padding-left: 100px;
 }
 
 #login {
@@ -87,6 +119,7 @@ table {
     margin-bottom: 40px;
 }
 
+/*======== Tabulky ========*/
 th, td {
     text-align: center;
     padding: 12px 25px;
@@ -218,6 +251,7 @@ button:hover {
     color: #daa700;
 }
 
+/*======== Formulare ========*/
 input[type="submit"] {
     height: 53px;
     background-color: #daa700;
@@ -274,15 +308,7 @@ input[type="submit"]:hover {
     color: #daa700;
 }
 
-#header-top button {
-    position: relative;
-    bottom: -5px;
-    display: inline;
-    float: right;
-    margin: 0;
-    padding: 15px 25px;
-}
-
+/*======== Prihlaseni / registrace ========*/
 #show, #show2 {
     position: relative;
     width: 20px;
@@ -352,6 +378,7 @@ input[type="submit"]:hover {
     text-decoration: underline;
 }
 
+/*======== Edit-form ========*/
 .uprava img {
     height: 20px;
     cursor: pointer;
@@ -442,7 +469,6 @@ input[type="submit"]:hover {
   overflow: hidden;
   cursor: pointer;
 }
-
 
 .uprava input[name="upravit-form"]:hover, .uprava input[name="upravit-bez-hesla"]:hover { 
     filter: brightness(0) saturate(100%) invert(46%) sepia(78%) saturate(523%) hue-rotate(83deg) brightness(95%) contrast(92%);
@@ -585,26 +611,6 @@ input[type="submit"]:hover {
     max-width: 50px;
 }
 
-#login {
-    all: unset;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    display: inline-block;
-    background-color: #daa700;
-    color: #000;
-    font-weight: 600;
-    border-radius: 8px;
-    padding: 0 25px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    position: relative;
-    top: 0px;
-    right: 5px;
-}
-
-#login:hover {
-    background-color: #ffc400;
-}
-
 /*======== Mac ==========*/
 @media screen and (min-width: 1080px) and (max-width: 1919px) {
     nav {
@@ -614,9 +620,9 @@ input[type="submit"]:hover {
 }
 
 
-/*======== Phone ==========*/
+/*======== Telefon ==========*/
 @media screen and (max-width: 767px) {
-  
+    
 }
 
 /*======== Tablet ==========*/
