@@ -85,6 +85,7 @@ git clone https://github.com/Mareczech321/Rezervace.git
   - Přihlášený uživatel:
     - To samé co nepřihlášení uživatel
     + Rezervace budou automaticky odemknuty
+    - Účet pro vyzkoušení - Test, heslo Test123
 
 ---
 
