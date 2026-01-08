@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  🌐 <b>Online verze projektu:</b>
+  <b>Online verze projektu:</b>
   <a href="http://rezervace-mulac.wz.cz:8080">http://rezervace-mulac.wz.cz:8080</a>
 </p>
 
@@ -132,6 +132,5 @@ Podrobnosti naleznete v souboru `LICENSE`.
 ---
 
 ## Kontakt
-
-[@Mareczech321](https://github.com/Mareczech321)  
+  
 Problémy a návrhy: [GitHub Issues](https://github.com/Mareczech321/Rezervace/issues)
